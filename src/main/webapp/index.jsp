@@ -7,6 +7,21 @@
 <title>Insert title here</title>
 </head>
 <body>
+<h3>Index</h3>
+<sec:authorize access="isAnonymous()">
+					<li><a href="<c:url value="/login" />">Login</a></li>
 
+				</sec:authorize>
+
+				<sec:authorize access="isAuthenticated()">
+
+					<li>
+						<form class="navbar-form pull-right" action="<c:url value="/salir" />" method="post">
+							<input type="hidden" name="_csrf" id="_csrf" class="form-control"
+								value="${_csrf.token}">
+							<button type="submit" class="btn btn-default">Salir</button>
+						</form>
+					</li>
+				</sec:authorize>
 </body>
 </html>

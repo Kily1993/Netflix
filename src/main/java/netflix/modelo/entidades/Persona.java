@@ -1,13 +1,23 @@
 package netflix.modelo.entidades;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-public class Persona {
+public class Persona implements UserDetails {
 
 	@Id
 	@NotEmpty
@@ -15,7 +25,11 @@ public class Persona {
 	
 	@NotNull
 	@NotEmpty
-	private String nombrePer;
+	private String username;
+	
+	@NotNull
+	@NotEmpty
+	private String password;
 	
 	
 	private String apellidoPer;
@@ -23,38 +37,56 @@ public class Persona {
 	@NotNull
 	@NotEmpty
 	private String mailPer;
+	
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Set<Permiso> permisos = new HashSet<Permiso>();
 
-	public Long getIdPer() {
-		return idPer;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		ArrayList<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+		for (Permiso permiso : permisos) {
+			authorities.add(new SimpleGrantedAuthority("ROLE_"+permiso.getNombrePer().toUpperCase()));
+		}
+		return authorities;
 	}
 
-	public void setIdPer(Long idPer) {
-		this.idPer = idPer;
+	@Override
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return password;
 	}
 
-	public String getNombrePer() {
-		return nombrePer;
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return username;
 	}
 
-	public void setNombrePer(String nombrePer) {
-		this.nombrePer = nombrePer;
+	@Override
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
-	public String getApellidoPer() {
-		return apellidoPer;
+	@Override
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
-	public void setApellidoPer(String apellidoPer) {
-		this.apellidoPer = apellidoPer;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
-	public String getMailPer() {
-		return mailPer;
+	@Override
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
 	}
 
-	public void setMailPer(String mailPer) {
-		this.mailPer = mailPer;
-	}
+	
 	
 	
 	
